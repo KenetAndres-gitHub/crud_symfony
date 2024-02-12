@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Person;
 use App\Form\PersonType;
 use App\Repository\PersonRepository;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,7 @@ class PersonController extends AbstractController
     public function index(PersonRepository $personRepository): Response
     {
         return $this->render('person/index.html.twig', [
-            'people' => $personRepository->findAll(),
+            'people' => $personRepository->findBy([],['id'=>'ASC']),
         ]);
     }
 
@@ -45,29 +46,34 @@ class PersonController extends AbstractController
         return $this->render('person/new.html.twig');
     }
 
-    #[Route('/{id}', name: 'app_person_show', methods: ['GET'])]
-    public function show(Person $person): Response
-    {
-        return $this->render('person/show.html.twig', [
-            'person' => $person,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_person_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Person $person, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(PersonType::class, $person);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+         // Obtener el ID del parámetro de la solicitud
+        $id = $request->get('id');
+        if ($request->isMethod('POST')) {
+            $firstName = $request->request->get('first_name');
+            $lastName = $request->request->get('last_name');
+            $birthdate = $request->request->get('birthdate');
+            
+            // Procesar los datos, por ejemplo, crear una nueva entidad Person y guardarla
+            $person = $entityManager->getRepository(Person::class)->find($id);
+            $person->setFirstName($firstName);
+            $person->setLastName($lastName);
+            $person->setBirthdate(new \DateTime($birthdate));
+            
+            $entityManager->persist($person);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_person_index', [], Response::HTTP_SEE_OTHER);
+            
+            return $this->redirectToRoute('app_person_index');
+            dump('enviado');
         }
-
+    
+       
+    
+        // Renderizamos la plantilla de edición con el formulario
         return $this->render('person/edit.html.twig', [
             'person' => $person,
-            'form' => $form,
         ]);
     }
 

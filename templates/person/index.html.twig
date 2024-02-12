@@ -74,12 +74,12 @@
 
 {% block body %}
     <h1>Índice de Personas</h1>
-
+    {% set counter = 1 %}
     <div id="tabla-container">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id</th>
+                    <th><a href="{{ path('app_person_new') }}" class="create-button"><i class="fa fa-plus"></i>Nuevo</a></th>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Fecha de Nacimiento</th>
@@ -89,16 +89,16 @@
             <tbody>
             {% for person in people %}
                 <tr>
-                    <td>{{ person.id }}</td>
+                    <td>{{ counter }}</td>
                     <td>{{ person.firstName }}</td>
                     <td>{{ person.lastName }}</td>
                     <td>{{ person.birthdate ? person.birthdate|date('Y-m-d') : '' }}</td>
                     <td>
-                        <a href="{{ path('app_person_show', {'id': person.id}) }}" class="button"><i class="fa fa-eye"></i> Mostrar</a>
                         <a href="{{ path('app_person_edit', {'id': person.id}) }}" class="button"><i class="fa fa-edit"></i> Editar</a>
                         <a href="{{ path('app_person_delete', {'id': person.id, '_token': csrf_token('delete' ~ person.id)}) }}" class="button" onclick="return confirm('¿Estás seguro de eliminar este registro?');"><i class="fa fa-trash"></i> Eliminar</a>
                 </td>
                 </tr>
+                {% set counter = counter + 1 %}
             {% else %}
                 <tr>
                     <td colspan="5">No se encontraron registros</td>
@@ -108,5 +108,5 @@
         </table>
     </div>
 
-    <a href="{{ path('app_person_new') }}" class="create-button"><i class="fa fa-plus"></i> Crear Nuevo</a>
+    
 {% endblock %}
