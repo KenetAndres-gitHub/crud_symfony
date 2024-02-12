@@ -1,12 +1,8 @@
 {{ form_start(form) }}
-    <div style="margin-bottom: 20px;">
+    <div style="width: 50%; margin: 0 auto; padding: 20px; border-radius: 10px; background: linear-gradient(to bottom right, #6b54f0, #2196f3);">
         {{ form_row(form.first_name) }}
-    </div>
-    <div style="margin-bottom: 20px;">
         {{ form_row(form.last_name) }}
-    </div>
-    <div style="margin-bottom: 20px;">
         {{ form_row(form.birthdate) }}
+        <button class="button" type="submit">{{ button_label|default('Save') }}</button>
     </div>
-    <button class="button" type="submit">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

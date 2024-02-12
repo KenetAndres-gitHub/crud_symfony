@@ -25,21 +25,24 @@ class PersonController extends AbstractController
     #[Route('/new', name: 'app_person_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $person = new Person();
-        $form = $this->createForm(PersonType::class, $person);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->isMethod('POST')) {
+            $firstName = $request->request->get('first_name');
+            $lastName = $request->request->get('last_name');
+            $birthdate = $request->request->get('birthdate');
+            
+            // Procesar los datos, por ejemplo, crear una nueva entidad Person y guardarla
+            $person = new Person();
+            $person->setFirstName($firstName);
+            $person->setLastName($lastName);
+            $person->setBirthdate(new \DateTime($birthdate));
+            
             $entityManager->persist($person);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_person_index', [], Response::HTTP_SEE_OTHER);
+            
+            return $this->redirectToRoute('app_person_index');
         }
-
-        return $this->render('person/new.html.twig', [
-            'person' => $person,
-            'form' => $form,
-        ]);
+    
+        return $this->render('person/new.html.twig');
     }
 
     #[Route('/{id}', name: 'app_person_show', methods: ['GET'])]
