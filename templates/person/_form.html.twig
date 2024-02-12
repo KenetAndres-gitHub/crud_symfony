@@ -1,4 +1,12 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div style="margin-bottom: 20px;">
+        {{ form_row(form.first_name) }}
+    </div>
+    <div style="margin-bottom: 20px;">
+        {{ form_row(form.last_name) }}
+    </div>
+    <div style="margin-bottom: 20px;">
+        {{ form_row(form.birthdate) }}
+    </div>
+    <button class="button" type="submit">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

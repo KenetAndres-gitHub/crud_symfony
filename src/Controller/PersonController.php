@@ -68,14 +68,21 @@ class PersonController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_person_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_person_delete', methods: ['GET'])]
     public function delete(Request $request, Person $person, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$person->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($person);
-            $entityManager->flush();
+        $token = $request->query->get('_token');
+
+        // Validar el token CSRF
+        if (!$this->isCsrfTokenValid('delete' . $person->getId(), $token)) {
+            throw $this->createAccessDeniedException('Token CSRF inválido.');
         }
+
+        // Procesar la eliminación
+        $entityManager->remove($person);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_person_index', [], Response::HTTP_SEE_OTHER);
     }
+    
 }
