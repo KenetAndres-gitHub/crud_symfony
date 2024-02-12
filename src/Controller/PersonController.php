@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Person;
-use App\Form\PersonType;
 use App\Repository\PersonRepository;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,10 +64,7 @@ class PersonController extends AbstractController
             $entityManager->flush();
             
             return $this->redirectToRoute('app_person_index');
-            dump('enviado');
         }
-    
-       
     
         // Renderizamos la plantilla de edición con el formulario
         return $this->render('person/edit.html.twig', [
