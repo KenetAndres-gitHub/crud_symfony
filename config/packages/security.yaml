@@ -16,9 +16,9 @@ security:
         main:
             pattern: ^/
             form_login:
-                login_path: /login
-                check_path: /login
-                default_target_path: /
+                login_path: /
+                check_path: /
+                default_target_path: /admin
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -30,7 +30,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/, roles: ROLE_USER }
+        #- { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:
